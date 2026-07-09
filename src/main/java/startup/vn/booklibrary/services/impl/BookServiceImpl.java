@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import startup.vn.booklibrary.exceptions.DuplicateInstanceException;
+import startup.vn.booklibrary.exceptions.ResourceNotFoundException;
 import startup.vn.booklibrary.mappers.BookMapper;
 import startup.vn.booklibrary.models.dtos.requests.BookCreateDTO;
+import startup.vn.booklibrary.models.dtos.requests.BookUpdateStockDTO;
 import startup.vn.booklibrary.models.dtos.responses.BookCreatedDTO;
 import startup.vn.booklibrary.repositories.BookRepository;
 import startup.vn.booklibrary.services.BookService;
@@ -45,6 +47,16 @@ public class BookServiceImpl implements BookService {
         String coverUrl = storeCoverImage(bookCreateDTO.getCoverImage());
         var book = bookRepository.save(bookMapper.toEntity(bookCreateDTO, coverUrl));
         return bookMapper.toResponse(book);
+    }
+
+    @Override
+    @Transactional
+    public BookCreatedDTO updateBook(Long id, BookUpdateStockDTO bookUpdateStockDTO) {
+        var book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found"));
+
+        book.setStock(bookUpdateStockDTO.getStock());
+        return bookMapper.toResponse(bookRepository.save(book));
     }
 
     private String storeCoverImage(MultipartFile coverImage) {

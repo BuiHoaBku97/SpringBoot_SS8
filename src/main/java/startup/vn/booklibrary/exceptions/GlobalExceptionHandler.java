@@ -21,6 +21,13 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.build(HttpStatus.CONFLICT.name(), ex.getMessage(), null));
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.build(HttpStatus.NOT_FOUND.name(), ex.getMessage(), null));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         return ResponseEntity
