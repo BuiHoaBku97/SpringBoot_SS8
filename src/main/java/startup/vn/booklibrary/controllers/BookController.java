@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,5 +45,13 @@ public class BookController {
                 .ok(ApiResponse.build(HttpStatus.OK.name(),
                         "Updated book stock",
                         bookService.updateBook(id, bookUpdateStockDTO)));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<BookCreatedDTO>> getBookById(@PathVariable Long id) {
+        return ResponseEntity
+                .ok(ApiResponse.build(HttpStatus.OK.name(),
+                        "Success",
+                        bookService.getBookById(id)));
     }
 }

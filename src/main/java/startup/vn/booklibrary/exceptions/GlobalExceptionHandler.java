@@ -8,59 +8,60 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import startup.vn.booklibrary.commons.ApiResponse;
+import startup.vn.booklibrary.models.dtos.responses.ErrorResponse;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateInstanceException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDuplicateInstance(DuplicateInstanceException ex) {
+    public ResponseEntity<ErrorResponse> handleDuplicateInstance(DuplicateInstanceException ex) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(ApiResponse.build(HttpStatus.CONFLICT.name(), ex.getMessage(), null));
+                .body(buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.build(HttpStatus.NOT_FOUND.name(), ex.getMessage(), null));
+                .body(buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Void>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         return ResponseEntity
                 .badRequest()
-                .body(ApiResponse.build(HttpStatus.BAD_REQUEST.name(), buildValidationMessage(ex), null));
+                .body(buildErrorResponse(HttpStatus.BAD_REQUEST, buildValidationMessage(ex)));
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBindException(BindException ex) {
+    public ResponseEntity<ErrorResponse> handleBindException(BindException ex) {
         return ResponseEntity
                 .badRequest()
-                .body(ApiResponse.build(HttpStatus.BAD_REQUEST.name(), buildValidationMessage(ex), null));
+                .body(buildErrorResponse(HttpStatus.BAD_REQUEST, buildValidationMessage(ex)));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity
                 .badRequest()
-                .body(ApiResponse.build(HttpStatus.BAD_REQUEST.name(), ex.getMessage(), null));
+                .body(buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(ApiResponse.build(HttpStatus.CONFLICT.name(), "Book already exists", null));
+                .body(buildErrorResponse(HttpStatus.CONFLICT, "Book already exists"));
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ApiResponse<Void>> handleIllegalState(IllegalStateException ex) {
+    public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.build(HttpStatus.INTERNAL_SERVER_ERROR.name(), ex.getMessage(), null));
+                .body(buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
     }
 
     private String buildValidationMessage(BindException ex) {
@@ -81,5 +82,13 @@ public class GlobalExceptionHandler {
 
     private String formatFieldError(FieldError fieldError) {
         return fieldError.getField() + ": " + fieldError.getDefaultMessage();
+    }
+
+    private ErrorResponse buildErrorResponse(HttpStatus status, String message) {
+        return ErrorResponse.builder()
+                .status(status.name())
+                .message(message)
+                .timestamp(LocalDateTime.now())
+                .build();
     }
 }

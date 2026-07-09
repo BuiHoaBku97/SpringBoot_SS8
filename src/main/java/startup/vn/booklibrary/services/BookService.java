@@ -8,4 +8,6 @@ public interface BookService {
     BookCreatedDTO createBook(BookCreateDTO bookCreateDTO);
 
     BookCreatedDTO updateBook(Long id, BookUpdateStockDTO bookUpdateStockDTO);
+
+    BookCreatedDTO getBookById(Long id);
 }

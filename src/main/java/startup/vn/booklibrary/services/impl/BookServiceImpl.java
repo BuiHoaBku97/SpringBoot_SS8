@@ -59,6 +59,14 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toResponse(bookRepository.save(book));
     }
 
+    @Override
+    public BookCreatedDTO getBookById(Long id) {
+        var book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found"));
+
+        return bookMapper.toResponse(book);
+    }
+
     private String storeCoverImage(MultipartFile coverImage) {
         if (coverImage == null || coverImage.isEmpty()) {
             throw new IllegalArgumentException("Cover image is require");
