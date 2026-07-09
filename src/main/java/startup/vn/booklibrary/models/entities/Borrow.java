@@ -2,6 +2,8 @@ package startup.vn.booklibrary.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +13,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import startup.vn.booklibrary.enums.BorrowStatus;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "borrows")
@@ -29,4 +34,11 @@ public class Borrow {
 
     @Column(name = "book_id", nullable = false)
     private Long bookId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BorrowStatus status;
+
+    @Column(name = "return_date")
+    private LocalDate returnDate;
 }

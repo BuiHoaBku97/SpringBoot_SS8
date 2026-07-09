@@ -29,6 +29,13 @@ public class GlobalExceptionHandler {
                 .body(buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
+    @ExceptionHandler(BookAlreadyReturnedException.class)
+    public ResponseEntity<ErrorResponse> handleBookAlreadyReturned(BookAlreadyReturnedException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         return ResponseEntity

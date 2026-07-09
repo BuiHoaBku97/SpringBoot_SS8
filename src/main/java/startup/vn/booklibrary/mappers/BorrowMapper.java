@@ -1,6 +1,7 @@
 package startup.vn.booklibrary.mappers;
 
 import org.springframework.stereotype.Component;
+import startup.vn.booklibrary.enums.BorrowStatus;
 import startup.vn.booklibrary.models.dtos.requests.BorrowCreateDTO;
 import startup.vn.booklibrary.models.dtos.responses.BorrowCreatedDTO;
 import startup.vn.booklibrary.models.entities.Borrow;
@@ -11,6 +12,7 @@ public class BorrowMapper {
         return Borrow.builder()
                 .username(borrowCreateDTO.getUsername())
                 .bookId(borrowCreateDTO.getBookId())
+                .status(BorrowStatus.BORROWING)
                 .build();
     }
 
@@ -19,6 +21,8 @@ public class BorrowMapper {
                 .id(borrow.getId())
                 .username(borrow.getUsername())
                 .bookId(borrow.getBookId())
+                .status(borrow.getStatus())
+                .returnDate(borrow.getReturnDate())
                 .build();
     }
 }

@@ -3,6 +3,8 @@ package startup.vn.booklibrary.controllers;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +30,13 @@ public class BorrowController {
                 .body(ApiResponse.build(HttpStatus.CREATED.name(),
                         "Created borrow",
                         borrowService.createBorrow(borrowCreateDTO)));
+    }
+
+    @PatchMapping("/{id}/return")
+    public ResponseEntity<ApiResponse<BorrowCreatedDTO>> returnBook(@PathVariable Long id) {
+        return ResponseEntity
+                .ok(ApiResponse.build(HttpStatus.OK.name(),
+                        "Returned book",
+                        borrowService.returnBook(id)));
     }
 }
