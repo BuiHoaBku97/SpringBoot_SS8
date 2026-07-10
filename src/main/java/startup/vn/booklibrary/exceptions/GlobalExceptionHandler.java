@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(buildErrorResponse(HttpStatus.CONFLICT, "Book already exists"));
+                .body(buildErrorResponse(HttpStatus.CONFLICT, "Duplicated data"));
     }
 
     @ExceptionHandler(IllegalStateException.class)
